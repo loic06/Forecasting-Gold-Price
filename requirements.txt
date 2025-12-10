@@ -3,7 +3,12 @@ numpy<2.0.0
 pandas==2.2.3
 
 # Uncomment if you use sklearn
-# scikit-learn==1.6.1
+scikit-learn==1.6.1
+
+xgboost==2.0.3
+pmdarima==2.1.1
+yfinance==0.2.66
+googlefinance==0.7
 
 # Install the correct TensorFlow version
 # Uncomment if you use TensorFlow
