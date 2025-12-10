@@ -5,6 +5,12 @@ pandas==2.2.3
 # Uncomment if you use sklearn
 scikit-learn==1.6.1
 
+# Notebook package
+xgboost
+statsmodels
+joblib
+plotly.express
+
 # Install the correct TensorFlow version
 # Uncomment if you use TensorFlow
 tensorflow==2.16.2    # For both Intel and Apple silicon
