@@ -3,7 +3,7 @@
 #      a slim or tensorflow base
 
 #      Standard version
-FROM python:3.12
+FROM python:3.10.6
 
 #      Slim version
 # FROM python:3.12-slim
@@ -17,7 +17,7 @@ RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy our code
-COPY packagename packagename
+COPY forecasting_gold_price forecasting_gold_price
 COPY api api
 
 # Make directories that we need, but that are not included in the COPY
