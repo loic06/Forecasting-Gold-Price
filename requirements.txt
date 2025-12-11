@@ -5,6 +5,10 @@ pandas==2.2.3
 # Uncomment if you use sklearn
 scikit-learn==1.6.1
 
+# Notebook package
+statsmodels
+joblib
+plotly.express
 xgboost==2.0.3
 pmdarima==2.1.1
 yfinance==0.2.66
@@ -12,8 +16,10 @@ googlefinance==0.7
 
 # Install the correct TensorFlow version
 # Uncomment if you use TensorFlow
-# tensorflow==2.16.2    # For both Intel and Apple silicon
-# keras==3.8.0
+tensorflow==2.16.2    # For both Intel and Apple silicon
+keras==3.8.0
+tensorflow==2.16.2    # For both Intel and Apple silicon
+keras==3.8.0
 
 # Google Cloud
 # Uncomment if you use Google Cloud Storage

@@ -15,7 +15,7 @@ if os.path.isfile('requirements_dev.txt'):
     requirements.extend([x.strip() for x in content if 'git+' not in x])
 
 
-setup(name='forecast_gold_price',
+setup(name='forecasting_gold_price',
       version="0.0.1",
       description="Project Description",
       packages=find_packages(),
@@ -23,5 +23,5 @@ setup(name='forecast_gold_price',
       test_suite='tests',
       # include_package_data: to install data from MANIFEST.in
       include_package_data=True,
-      # scripts=['scripts/Forecast-Gold-Price-run'],
+      # scripts=['scripts/forecasting_gold_price-run'],
       zip_safe=False)
