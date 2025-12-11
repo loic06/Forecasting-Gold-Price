@@ -4,7 +4,7 @@ from google.cloud import bigquery
 from colorama import Fore, Style
 from pathlib import Path
 
-from taxifare.params import *
+#from forecasting_gold_price.params import *
 
 def clean_data(df: pd.DataFrame) -> pd.DataFrame:
     """
