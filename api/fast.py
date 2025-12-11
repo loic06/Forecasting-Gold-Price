@@ -3,8 +3,10 @@ from forecasting_gold_price.main import predict
 
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
+#from forecasting_gold_price.ml_logic.registry import load_model
 
 app = FastAPI()
+#app.state.model = load_model()
 
 app.add_middleware(
     CORSMiddleware,
