@@ -77,7 +77,7 @@ class CustomFeatureSelector(BaseEstimator, TransformerMixin):
         # No-op to be compatible with pipelines calling set_output
         return self
 
-def load_model(stage="Production") :
+def load_model() :
     """
     Return a saved model:
     - locally (latest one in alphabetical order)
@@ -92,6 +92,3 @@ def load_model(stage="Production") :
         print("✅ Model loaded from local disk")
 
         return latest_model
-
-print(os.path.realpath(__file__))
-model = load_model()
