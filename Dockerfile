@@ -2,6 +2,7 @@ FROM python:3.10.6-buster
 COPY requirements.txt /requirements.txt
 COPY api /api
 COPY forecasting_gold_price /forecasting_gold_price
+COPY models /models
 RUN pip install --no-cache-dir --upgrade pip
 RUN pip install --no-cache-dir -r requirements.txt
 # RUN mkdir /raw_data
