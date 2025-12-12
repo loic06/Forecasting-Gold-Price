@@ -1,12 +1,22 @@
 # TODO: Import your package, replace this by explicit imports of what you need
-from forecasting_gold_price.main import predict
-
+import pandas as pd
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-#from forecasting_gold_price.ml_logic.registry import load_model
+from forecasting_gold_price.registry import load_model, TrendEngineeringTransformer, CustomFeatureSelector
+import sys
 
 app = FastAPI()
-#app.state.model = load_model()
+
+# Chargement du modèle au démarrage
+try:
+    sys.modules['__main__'].TrendEngineeringTransformer = TrendEngineeringTransformer
+    sys.modules['__main__'].CustomFeatureSelector = CustomFeatureSelector
+    model = load_model()
+    print("✅ Modèle chargé en mémoire depuis le fichier local")
+except Exception as e:
+    print(f"❌ Erreur lors du chargement du modèle: {e}")
+    model = None
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,25 +26,60 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# Endpoint for https://your-domain.com/
+# Endpoint for https://127.0.0.1:8000/
 @app.get("/")
 def root():
     return {
-        'message': "Hi, The API is running!"
+        'message': "Hi ça marche"
     }
 
-# Endpoint for https://your-domain.com/predict?input_one=154&input_two=199
+# Endpoint for 'https://127.0.0.1:8000/predict?close=2650.17&open=2650.8&high=2652.4&low=2649.7&Basis=2651.1&Upper=2670.2&Lower=2632&Up_Trend=NaN&Down_Trend=2668&KAMA=2653.29&RSI=46.5&Bollinger_Bands_b=0.32&Bollinger_BandWidth=1.04&Highest_Expansion=1.58&FEDFUNDS=4.83'
+
 @app.get("/predict")
-def get_predict(input_one: float,
-            input_two: float):
-    # TODO: Do something with your input
-    # i.e. feed it to your model.predict, and return the output
-    # For a dummy version, just return the sum of the two inputs and the original inputs
-    prediction = float(input_one) + float(input_two)
+def predict(
+    close: float,
+    open_: float,
+    high: float,
+    low: float,
+    Basis: float,
+    Upper: float,
+    Lower: float,
+    Up_Trend: float,
+    Down_Trend: float,
+    KAMA: float,
+    RSI: float,
+    Bollinger_Bands_b: float,
+    Bollinger_BandWidth: float,
+    Highest_Expansion: float,
+    FEDFUNDS: float
+):
+
+    # Construction du DataFrame avec les noms de features attendus
+    X_pred = pd.DataFrame({
+        'close': [close],
+        'open': [open_],
+        'high': [high],
+        'low': [low],
+        'Basis': [Basis],
+        'Upper': [Upper],
+        'Lower': [Lower],
+        'Up Trend': [Up_Trend],
+        'Down Trend': [Down_Trend],
+        'KAMA': [KAMA],
+        'RSI': [RSI],
+        'Bollinger Bands %b': [Bollinger_Bands_b],
+        'Bollinger BandWidth': [Bollinger_BandWidth],
+        'Highest Expansion': [Highest_Expansion],
+        'FEDFUNDS': [FEDFUNDS],
+    })
+
+    # Prédiction
+    pred = model.predict(X_pred)
+
+    # Conversion en type Python natif pour la sérialisation JSON
+    prediction_value = float(pred[0]) if hasattr(pred, '__iter__') else float(pred)
+
     return {
-        'prediction': prediction,
-        'inputs': {
-            'input_one': input_one,
-            'input_two': input_two
-        }
+        'prediction': prediction_value,
+        'status': 'success'
     }
