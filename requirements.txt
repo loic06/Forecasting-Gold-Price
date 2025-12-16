@@ -1,6 +1,7 @@
 # data science
 numpy<2.0.0
 pandas==2.2.3
+yfinance
 
 # Uncomment if you use sklearn
 scikit-learn==1.6.1
