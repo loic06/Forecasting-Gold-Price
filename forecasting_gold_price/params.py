@@ -21,7 +21,7 @@ GAR_MEMORY = os.environ.get("GAR_MEMORY")
 
 ##################  CONSTANTS  #####################
 LOCAL_DATA_PATH = os.path.join(os.path.expanduser('~'), "code", "Loic06", "Forecasting-Gold-Price", "raw_data")
-LOCAL_REGISTRY_PATH =  os.path.join(os.path.expanduser('~'), "code", "Loic06", "Forecasting-Gold-Price", "forecasting_gold_price")
+LOCAL_REGISTRY_PATH =  os.path.join(os.path.expanduser('~'), "code", "Loic06", "Forecasting-Gold-Price")
 
 
 ################## VALIDATIONS #################
