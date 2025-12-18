@@ -1,6 +1,7 @@
 # data science
 numpy<2.0.0
 pandas==2.2.3
+requests
 
 # Uncomment if you use sklearn
 scikit-learn==1.6.1
@@ -9,10 +10,12 @@ scikit-learn==1.6.1
 statsmodels
 joblib
 plotly.express
-xgboost==2.0.3
+xgboost>=2.1.4
 pmdarima==2.1.1
 yfinance==0.2.66
 googlefinance==0.7
+beautifulsoup4
+scipy
 
 # Install the correct TensorFlow version
 # Uncomment if you use TensorFlow
