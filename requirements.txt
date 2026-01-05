@@ -1,16 +1,21 @@
 # data science
 numpy<2.0.0
 pandas==2.2.3
+requests
 yfinance
 
 # Uncomment if you use sklearn
 scikit-learn==1.6.1
 
 # Notebook package
-xgboost
 statsmodels
 joblib
 plotly.express
+xgboost>=2.1.4
+pmdarima==2.1.1
+googlefinance==0.7
+beautifulsoup4
+scipy
 
 # Install the correct TensorFlow version
 # Uncomment if you use TensorFlow
