@@ -1,78 +1,40 @@
 import numpy as np
-import time
 
-from colorama import Fore, Style
-from typing import Tuple
-
-# Timing the TF import
-print(Fore.BLUE + "\nLoading TensorFlow..." + Style.RESET_ALL)
-start = time.perf_counter()
-
-from tensorflow import keras
-from keras import Model, Sequential, layers, regularizers, optimizers
-from keras.callbacks import EarlyStopping
-
-end = time.perf_counter()
-print(f"\n✅ TensorFlow loaded ({round(end - start, 2)}s)")
+from sklearn.linear_model import LinearRegression
+from sklearn.pipeline import Pipeline
+from sklearn.feature_selection import SelectFromModel
+from forecasting_gold_price.preprocessor import build_preprocessing_pipeline
 
 
-
-def initialize_model(input_shape: tuple) -> Model:
+def initialize_model():
     """
-    Initialize the Neural Network with random weights
+    Initialize the LineareRegression model
     """
-    #Mettre notre code ici
+    model = LinearRegression()
 
     print("✅ Model initialized")
 
     return model
 
 
-def compile_model(model: Model, learning_rate=0.0005) -> Model:
-    """
-    Compile the Neural Network
-    """
-    #Mettre notre code ici
-
-    print("✅ Model compiled")
-
-    return model
-
 def train_model(
-        model: Model,
+        model,
         X: np.ndarray,
-        y: np.ndarray,
-        batch_size=256,
-        patience=2,
-        validation_data=None, # overrides validation_split
-        validation_split=0.3
-    ) -> Tuple[Model, dict]:
+        y: np.ndarray):
     """
     Fit the model and return a tuple (fitted_model, history)
     """
-    print(Fore.BLUE + "\nTraining model..." + Style.RESET_ALL)
+    strategy="custom"
 
-    #Mettre notre code ici
+    pipe_auto = build_preprocessing_pipeline(remove_features=True, strategy=strategy, exclude_for_zero_drop=['GC_F_Close']) # mean, median
 
-    print(f"✅ Model trained on {len(X)} rows with min val MAE: {round(np.min(history.history['val_mae']), 2)}")
+    pipe = Pipeline(steps=[
+    ('preprocessing', pipe_auto),
+    ('sfm', SelectFromModel(model)),
+    ('model', model)])
 
-    return model, history
+    model_trained = pipe.fit(X, y)
 
+    print(f"✅ Model trained")
 
-def evaluate_model(
-        model: Model,
-        X: np.ndarray,
-        y: np.ndarray,
-        batch_size=64
-    ) -> Tuple[Model, dict]:
-    """
-    Evaluate trained model performance on the dataset
-    """
-
-    print(Fore.BLUE + f"\nEvaluating model on {len(X)} rows..." + Style.RESET_ALL)
-
-    #Mettre notre code ici
-
-    print(f"✅ Model evaluated, MAE: {round(mae, 2)}")
-
-    return metrics
+    return model_trained

@@ -1,12 +1,24 @@
 # TODO: Import your package, replace this by explicit imports of what you need
-from forecasting_gold_price.main import predict
-
+import pandas as pd
+from datetime import timedelta
 from fastapi import FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-#from forecasting_gold_price.ml_logic.registry import load_model
+from forecasting_gold_price.registry import load_model
+from forecasting_gold_price.data import download_and_concat_tickers
+from forecasting_gold_price.data import clean_name
+
 
 app = FastAPI()
-#app.state.model = load_model()
+
+# Chargement du modèle au démarrage
+
+try:
+    app.model = load_model()
+    print("✅ Modèle chargé en mémoire depuis le fichier local")
+except Exception as e:
+    print(f"❌ Erreur lors du chargement du modèle: {e}")
+    model = None
+
 
 app.add_middleware(
     CORSMiddleware,
@@ -16,25 +28,60 @@ app.add_middleware(
     allow_headers=["*"],  # Allows all headers
 )
 
-# Endpoint for https://your-domain.com/
+# Endpoint for https://127.0.0.1:8000/
 @app.get("/")
 def root():
     return {
-        'message': "Hi, The API is running!"
+        'message': "Hi ça marche"
     }
 
-# Endpoint for https://your-domain.com/predict?input_one=154&input_two=199
+# Endpoint for 'https://127.0.0.1:8000/predict?'
+
 @app.get("/predict")
-def get_predict(input_one: float,
-            input_two: float):
-    # TODO: Do something with your input
-    # i.e. feed it to your model.predict, and return the output
-    # For a dummy version, just return the sum of the two inputs and the original inputs
-    prediction = float(input_one) + float(input_two)
+def predict(end_date:str):
+
+    tickers = [
+    "^GSPC", "^DJI", "^VIX", "^GVZ", "^OVX", "^MOVE", "BOND", "^STOXX",
+    "EURUSD=X", "DX-Y.NYB", "CL=F", "BZ=F", "SI=F", "PL=F", "BTC-USD", "JPM",
+    "PA=F", "^TNX", "GC=F", "GDX", "EGO", "USO", "GD=F",
+]
+
+    new_end = pd.to_datetime(end_date)
+    new_start = new_end-timedelta(1)
+    new_start = new_start.strftime('%Y-%m-%d')
+
+    # Construction du DataFrame avec les noms de features attendus
+    X_pred = download_and_concat_tickers(tickers, new_start, end_date)
+    # Replace special characters in columns name
+    X_pred.columns = [clean_name(c) for c in X_pred.columns]
+
+    # Prédiction
+    pred = app.model.predict(X_pred)
+
+
+    # Conversion en type Python natif pour la sérialisation JSON
+    prediction_value = float(pred[0]) if hasattr(pred, '__iter__') else float(pred)
+
     return {
-        'prediction': prediction,
-        'inputs': {
-            'input_one': input_one,
-            'input_two': input_two
-        }
+        'prediction': prediction_value,
+        'status': 'success'
+    }
+
+@app.get("/get_gold")
+def get_gold(end_date:str):
+
+    new_end = pd.to_datetime(end_date)-timedelta(1)
+    new_start = new_end-timedelta(5)
+    new_start = new_start.strftime('%Y-%m-%d')
+
+    ticker = ["GC=F"]
+
+    # Construction du DataFrame avec les noms de features attendus
+    gold_value = download_and_concat_tickers(ticker, new_start, new_end)
+    # Replace special characters in columns name
+    gold_value.columns = [clean_name(c) for c in gold_value.columns]
+
+    return {
+        'value': gold_value["GC_F_Close"],
+        'status': 'success'
     }

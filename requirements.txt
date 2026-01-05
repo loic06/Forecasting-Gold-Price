@@ -2,6 +2,7 @@
 numpy<2.0.0
 pandas==2.2.3
 requests
+yfinance
 
 # Uncomment if you use sklearn
 scikit-learn==1.6.1
@@ -12,7 +13,6 @@ joblib
 plotly.express
 xgboost>=2.1.4
 pmdarima==2.1.1
-yfinance==0.2.66
 googlefinance==0.7
 beautifulsoup4
 scipy
